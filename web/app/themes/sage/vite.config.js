@@ -1,10 +1,13 @@
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vite';
 import tailwindcss from '@tailwindcss/vite';
-import laravel from 'laravel-vite-plugin'
+import laravel from 'laravel-vite-plugin';
 import { wordpressPlugin, wordpressThemeJson } from '@roots/vite-plugin';
 
 export default defineConfig({
-  base: '/app/themes/sage/public/build/',
+  base:
+    process.env.NODE_ENV === 'development'
+      ? 'http://localhost:5173/app/themes/sage/public/build/'
+      : '/app/themes/sage/public/build/',
   plugins: [
     tailwindcss(),
     laravel({
@@ -27,6 +30,15 @@ export default defineConfig({
       disableTailwindFontSizes: false,
     }),
   ],
+  server: {
+    host: 'localhost',
+    port: 5173,
+    strictPort: true,
+    cors: true,
+    hmr: {
+      host: 'localhost',
+    },
+  },
   resolve: {
     alias: {
       '@scripts': '/resources/js',
@@ -35,4 +47,4 @@ export default defineConfig({
       '@images': '/resources/images',
     },
   },
-})
+});
